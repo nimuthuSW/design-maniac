@@ -1,8 +1,7 @@
 const SOCIALS = [
-  { label: 'Email', href: 'mailto:hello@example.com' },
-  { label: 'Dribbble', href: 'https://dribbble.com' },
+  { label: 'Email', href: 'mailto:nimuthusw4@gmail.com' },
   { label: 'GitHub', href: 'https://github.com/nimuthuSW' },
-  { label: 'LinkedIn', href: 'https://linkedin.com' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nimuthusw/' },
 ]
 
 export default function Footer() {
