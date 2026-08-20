@@ -56,6 +56,12 @@ export const SKILLS = [
   'Art Direction',
 ]
 
+export const ABOUT_FACTS = [
+  { label: 'Based in', value: 'Colombo · remote-first' },
+  { label: 'Toolbox', value: 'Figma, React, Framer Motion' },
+  { label: 'Currently', value: 'Design systems & motion' },
+]
+
 export const PRINCIPLES = [
   {
     n: '01',

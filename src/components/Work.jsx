@@ -1,13 +1,56 @@
 import { motion } from 'framer-motion'
 import { PROJECTS } from '../data'
+import { useTilt } from '../hooks/use3d'
 
 const reveal = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 60, rotateX: -18, z: -120 },
   show: (i) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] },
+    rotateX: 0,
+    z: 0,
+    transition: { duration: 0.9, delay: i * 0.09, ease: [0.22, 1, 0.36, 1] },
   }),
+}
+
+function WorkCard({ project, index }) {
+  const tilt = useTilt({ max: 9, scale: 1.015, depth: 34 })
+
+  return (
+    <motion.div
+      className="work-slot"
+      custom={index}
+      variants={reveal}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: '-80px' }}
+    >
+      <article className="work-card" {...tilt} data-hover>
+        <span className="card-glare" aria-hidden="true" />
+        <div className="work-visual" style={{ background: project.gradient }}>
+          <div className="work-visual-grain" />
+          <span className="work-year">{project.year}</span>
+          <span className="work-glyph">{project.name[0]}</span>
+          <span className="work-visual-sheen" aria-hidden="true" />
+        </div>
+        <div className="work-body">
+          <div className="work-top">
+            <h3 className="work-name">{project.name}</h3>
+            <span className="work-arrow" aria-hidden="true">
+              ↗
+            </span>
+          </div>
+          <p className="work-tag">{project.tag}</p>
+          <p className="work-blurb">{project.blurb}</p>
+          <ul className="work-metrics">
+            {project.metrics.map((m) => (
+              <li key={m}>{m}</li>
+            ))}
+          </ul>
+        </div>
+      </article>
+    </motion.div>
+  )
 }
 
 export default function Work() {
@@ -23,35 +66,7 @@ export default function Work() {
 
         <div className="work-grid">
           {PROJECTS.map((p, i) => (
-            <motion.article
-              className="work-card"
-              key={p.id}
-              custom={i}
-              variants={reveal}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: '-80px' }}
-              data-hover
-            >
-              <div className="work-visual" style={{ background: p.gradient }}>
-                <div className="work-visual-grain" />
-                <span className="work-year">{p.year}</span>
-                <span className="work-glyph">{p.name[0]}</span>
-              </div>
-              <div className="work-body">
-                <div className="work-top">
-                  <h3 className="work-name">{p.name}</h3>
-                  <span className="work-arrow" aria-hidden="true">↗</span>
-                </div>
-                <p className="work-tag">{p.tag}</p>
-                <p className="work-blurb">{p.blurb}</p>
-                <ul className="work-metrics">
-                  {p.metrics.map((m) => (
-                    <li key={m}>{m}</li>
-                  ))}
-                </ul>
-              </div>
-            </motion.article>
+            <WorkCard project={p} index={i} key={p.id} />
           ))}
         </div>
       </div>

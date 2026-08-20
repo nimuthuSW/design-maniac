@@ -228,7 +228,13 @@
    ========================================================================= */
 .hero {
   position: relative;
-  padding: 12rem 0 5rem;
+  padding: 11rem 0 5rem;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  align-items: center;
+  gap: 2rem;
 }
 .hero-eyebrow {
   margin-bottom: 1.6rem;
@@ -236,19 +242,22 @@
 .hero-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.7rem, 9vw, 6.4rem);
+  font-size: clamp(2.7rem, 6.4vw, 5.2rem);
   line-height: 0.98;
   letter-spacing: -0.03em;
+  perspective: 800px;
 }
 .line {
   display: block;
   overflow: hidden;
+  transform-style: preserve-3d;
 }
 .word-mask {
   display: inline-flex;
   overflow: hidden;
   vertical-align: top;
   padding-right: 0.24em;
+  perspective: 700px;
 }
 .word {
   display: inline-block;
@@ -270,10 +279,14 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
-  margin-top: 4.5rem;
+  margin-top: 3rem;
   padding-top: 2.4rem;
   border-top: 1px solid var(--line);
-  max-width: 640px;
+  max-width: 720px;
+  perspective: 900px;
+}
+.stat {
+  transform-style: preserve-3d;
 }
 .stat-value {
   font-family: var(--font-display);
@@ -288,9 +301,8 @@
 }
 .scroll-hint {
   position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 2.4rem;
+  right: max(1.5rem, calc((100vw - 1200px) / 2));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -324,18 +336,43 @@
    Marquee
    ========================================================================= */
 .marquee {
-  padding: 1.2rem 0;
+  padding: 1.6rem 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   overflow: hidden;
+  perspective: 700px;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-stage {
+  display: grid;
+  gap: 0.2rem;
+  transform-style: preserve-3d;
+  transform: rotateX(17deg);
+}
+.marquee-band--back {
+  opacity: 0.3;
+  transform: translateZ(-110px) scale(1.06);
+}
+.marquee-band--back .marquee-item {
+  color: var(--violet);
 }
 .marquee-track {
   display: inline-flex;
   gap: 2.6rem;
   white-space: nowrap;
   animation: scrollX 34s linear infinite;
+}
+.marquee-track--reverse {
+  animation: scrollXRev 44s linear infinite;
+}
+@keyframes scrollXRev {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 .marquee-item {
   display: inline-flex;
@@ -387,18 +424,28 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.6rem;
+  perspective: 1400px;
+}
+.work-slot {
+  perspective: 1100px;
+  transform-style: preserve-3d;
 }
 .work-card {
+  position: relative;
+  display: block;
   border-radius: var(--radius-lg);
   border: 1px solid var(--line);
   background: var(--card);
-  overflow: hidden;
-  transition: transform 0.4s var(--ease), border-color 0.4s, background 0.4s;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))
+    scale(var(--tilt-scale, 1));
+  transition: transform 0.25s var(--ease), border-color 0.4s, background 0.4s,
+    box-shadow 0.4s var(--ease);
 }
 .work-card:hover {
-  transform: translateY(-6px);
   border-color: var(--line-strong);
   background: var(--card-hover);
+  box-shadow: var(--shadow);
 }
 .work-visual {
   position: relative;
@@ -406,6 +453,24 @@
   display: grid;
   place-items: center;
   overflow: hidden;
+  border-radius: calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px) 0 0;
+  transform: translateZ(calc(var(--tz, 0px) * 0.5));
+  transition: transform 0.25s var(--ease);
+}
+.work-visual-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.9s var(--ease);
+}
+.work-card:hover .work-visual-sheen {
+  transform: translateX(120%);
 }
 .work-visual-grain {
   position: absolute;
@@ -436,6 +501,8 @@
 }
 .work-body {
   padding: 1.6rem;
+  transform: translateZ(calc(var(--tz, 0px) * 0.9));
+  transition: transform 0.25s var(--ease);
 }
 .work-top {
   display: flex;
@@ -680,6 +747,11 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.4rem;
+  perspective: 1400px;
+}
+.principle-slot {
+  perspective: 1000px;
+  transform-style: preserve-3d;
 }
 .principle {
   padding: 2rem;
@@ -688,6 +760,33 @@
   background: var(--card);
   position: relative;
   overflow: hidden;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))
+    scale(var(--tilt-scale, 1));
+  transition: transform 0.25s var(--ease), background 0.4s, border-color 0.4s;
+}
+.principle:hover {
+  background: var(--card-hover);
+  border-color: var(--line-strong);
+}
+.principle-ghost {
+  position: absolute;
+  right: -0.2rem;
+  bottom: -2.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 7rem;
+  line-height: 1;
+  color: var(--text);
+  opacity: 0.05;
+  transform: translateZ(-40px);
+  transition: opacity 0.4s, transform 0.5s var(--ease);
+  pointer-events: none;
+}
+.principle:hover .principle-ghost {
+  opacity: 0.12;
+  transform: translateZ(-40px) translateY(-8px);
 }
 .principle::before {
   content: '';
@@ -784,8 +883,664 @@
 }
 
 /* =========================================================================
+   3D — shared primitives
+   ========================================================================= */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--grad-brand);
+  transform-origin: 0 50%;
+  z-index: 60;
+}
+
+.bg-noise {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Pointer-tracked highlight shared by tilting cards */
+.card-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.16),
+    transparent 46%
+  );
+  opacity: var(--glare, 0);
+  transition: opacity 0.35s var(--ease);
+  pointer-events: none;
+  z-index: 3;
+}
+:root[data-theme='light'] .card-glare {
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(124, 92, 255, 0.16),
+    transparent 46%
+  );
+}
+
+/* =========================================================================
+   Hero — perspective floor + 3D scene
+   ========================================================================= */
+.grid-floor {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 240%;
+  height: 42vh;
+  z-index: -1;
+  pointer-events: none;
+  transform: translateX(-50%) perspective(560px) rotateX(76deg);
+  transform-origin: 50% 100%;
+  background-image: linear-gradient(rgba(124, 92, 255, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 92, 255, 0.35) 1px, transparent 1px);
+  background-size: 90px 90px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 100%, #000, transparent 68%);
+  mask-image: radial-gradient(ellipse at 50% 100%, #000, transparent 68%);
+  animation: floorMove 7s linear infinite;
+}
+@keyframes floorMove {
+  to {
+    background-position: 0 90px, 0 0;
+  }
+}
+
+.hero-scene {
+  position: relative;
+  height: min(58vh, 520px);
+  min-height: 380px;
+}
+.scene {
+  position: absolute;
+  inset: 0;
+  perspective: 1100px;
+  perspective-origin: 50% 45%;
+}
+.scene-glow {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 92, 255, 0.35), transparent 65%);
+  filter: blur(50px);
+}
+.scene-stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--sx, 0deg)) rotateY(var(--sy, 0deg));
+}
+
+/* Cube */
+.cube {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  transform-style: preserve-3d;
+  animation: cubeSpin 26s linear infinite;
+}
+.cube-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(124, 92, 255, 0.5),
+    rgba(255, 106, 193, 0.24)
+  );
+  box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(3px);
+}
+.cube-front {
+  transform: translateZ(84px);
+}
+.cube-back {
+  transform: rotateY(180deg) translateZ(84px);
+}
+.cube-right {
+  transform: rotateY(90deg) translateZ(84px);
+  background: linear-gradient(135deg, rgba(52, 229, 255, 0.42), rgba(124, 92, 255, 0.24));
+}
+.cube-left {
+  transform: rotateY(-90deg) translateZ(84px);
+  background: linear-gradient(135deg, rgba(255, 179, 64, 0.4), rgba(255, 106, 193, 0.24));
+}
+.cube-top {
+  transform: rotateX(90deg) translateZ(84px);
+  background: linear-gradient(135deg, rgba(182, 255, 92, 0.34), rgba(52, 229, 255, 0.24));
+}
+.cube-bottom {
+  transform: rotateX(-90deg) translateZ(84px);
+}
+@keyframes cubeSpin {
+  from {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  to {
+    transform: rotateX(360deg) rotateY(720deg);
+  }
+}
+
+/* Orbits */
+.orbit {
+  position: absolute;
+  width: 330px;
+  height: 330px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+.orbit-dot {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  margin-left: -5.5px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 20px var(--cyan);
+}
+.orbit-a {
+  transform: rotateX(72deg);
+  animation: orbitA 14s linear infinite;
+}
+.orbit-b {
+  width: 260px;
+  height: 260px;
+  transform: rotateX(66deg) rotateY(28deg);
+  animation: orbitB 10s linear infinite reverse;
+}
+.orbit-b .orbit-dot {
+  background: var(--pink);
+  box-shadow: 0 0 20px var(--pink);
+}
+.orbit-c {
+  width: 400px;
+  height: 400px;
+  transform: rotateX(80deg) rotateY(-18deg);
+  animation: orbitC 22s linear infinite;
+}
+.orbit-c .orbit-dot {
+  background: var(--amber);
+  box-shadow: 0 0 20px var(--amber);
+}
+@keyframes orbitA {
+  from {
+    transform: rotateX(72deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(72deg) rotateZ(360deg);
+  }
+}
+@keyframes orbitB {
+  from {
+    transform: rotateX(66deg) rotateY(28deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(66deg) rotateY(28deg) rotateZ(360deg);
+  }
+}
+@keyframes orbitC {
+  from {
+    transform: rotateX(80deg) rotateY(-18deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(80deg) rotateY(-18deg) rotateZ(360deg);
+  }
+}
+
+/* Floating glass panes */
+.pane {
+  position: absolute;
+  width: 186px;
+  padding: 14px;
+  display: grid;
+  gap: 9px;
+  border-radius: 16px;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--bg-elev) 62%, transparent);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+}
+.pane-bar {
+  height: 8px;
+  width: 46px;
+  border-radius: 99px;
+  background: var(--grad-brand);
+}
+.pane-line {
+  height: 7px;
+  border-radius: 99px;
+  background: var(--line-strong);
+}
+.pane-line.short {
+  width: 58%;
+}
+.pane-pill {
+  height: 22px;
+  width: 74px;
+  border-radius: 99px;
+  background: var(--grad-cool);
+  opacity: 0.85;
+}
+.pane-swatch {
+  height: 54px;
+  border-radius: 12px;
+  background: var(--grad-brand);
+}
+.pane-1 {
+  transform: translate3d(-165px, -125px, 150px) rotateY(20deg) rotateX(-6deg);
+  animation: pane1 9s ease-in-out infinite;
+}
+.pane-2 {
+  transform: translate3d(150px, 130px, 120px) rotateY(-22deg) rotateX(8deg);
+  animation: pane2 11s ease-in-out infinite;
+}
+@keyframes pane1 {
+  0%,
+  100% {
+    transform: translate3d(-165px, -125px, 150px) rotateY(20deg) rotateX(-6deg);
+  }
+  50% {
+    transform: translate3d(-165px, -95px, 185px) rotateY(26deg) rotateX(-11deg);
+  }
+}
+@keyframes pane2 {
+  0%,
+  100% {
+    transform: translate3d(150px, 130px, 120px) rotateY(-22deg) rotateX(8deg);
+  }
+  50% {
+    transform: translate3d(150px, 100px, 150px) rotateY(-28deg) rotateX(13deg);
+  }
+}
+
+/* Shards */
+.shard {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--grad-cool);
+  opacity: 0.75;
+  box-shadow: 0 10px 30px -8px var(--cyan);
+}
+.shard-1 {
+  transform: translate3d(180px, -160px, 60px) rotate(12deg);
+  animation: shard1 12s ease-in-out infinite;
+}
+.shard-2 {
+  width: 22px;
+  height: 22px;
+  background: var(--grad-brand);
+  transform: translate3d(-190px, 120px, 90px) rotate(-8deg);
+  animation: shard2 9s ease-in-out infinite;
+}
+.shard-3 {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, var(--pink));
+  transform: translate3d(60px, 190px, -40px);
+  animation: shard3 15s ease-in-out infinite;
+}
+@keyframes shard1 {
+  0%,
+  100% {
+    transform: translate3d(180px, -160px, 60px) rotate(12deg);
+  }
+  50% {
+    transform: translate3d(205px, -120px, 130px) rotate(48deg);
+  }
+}
+@keyframes shard2 {
+  0%,
+  100% {
+    transform: translate3d(-190px, 120px, 90px) rotate(-8deg);
+  }
+  50% {
+    transform: translate3d(-150px, 155px, 30px) rotate(40deg);
+  }
+}
+@keyframes shard3 {
+  0%,
+  100% {
+    transform: translate3d(60px, 190px, -40px);
+  }
+  50% {
+    transform: translate3d(10px, 160px, 40px);
+  }
+}
+
+/* =========================================================================
+   About — rotating skill cylinder + depth stack
+   ========================================================================= */
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  gap: 3rem;
+  align-items: center;
+}
+.about-facts {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.2rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+.about-fact {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1rem;
+  align-items: baseline;
+}
+.about-fact dt {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.about-fact dd {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+}
+
+.depth-stack {
+  position: relative;
+  height: 190px;
+  margin-top: 2.4rem;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+.depth-layer {
+  position: absolute;
+  top: 42px;
+  left: 26px;
+  width: 190px;
+  height: 84px;
+  border-radius: 14px;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--bg-elev) 78%, transparent);
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+  transition: transform 0.6s var(--ease), opacity 0.6s;
+}
+.depth-1 {
+  transform: rotateX(56deg) rotateZ(-24deg) translateZ(0px);
+  background: var(--grad-brand);
+  border-color: transparent;
+  opacity: 0.9;
+}
+.depth-2 {
+  transform: rotateX(56deg) rotateZ(-24deg) translateZ(38px);
+  border-color: color-mix(in srgb, var(--cyan) 55%, transparent);
+  background: color-mix(in srgb, var(--cyan) 10%, transparent);
+}
+.depth-3 {
+  transform: rotateX(56deg) rotateZ(-24deg) translateZ(76px);
+  border-color: color-mix(in srgb, var(--pink) 55%, transparent);
+  background: color-mix(in srgb, var(--pink) 8%, transparent);
+}
+.depth-stack:hover .depth-1 {
+  transform: rotateX(56deg) rotateZ(-24deg) translateZ(-18px);
+}
+.depth-stack:hover .depth-2 {
+  transform: rotateX(56deg) rotateZ(-24deg) translateZ(58px);
+}
+.depth-stack:hover .depth-3 {
+  transform: rotateX(56deg) rotateZ(-24deg) translateZ(134px);
+}
+.depth-caption {
+  position: absolute;
+  left: 246px;
+  top: 78px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.ring-wrap {
+  position: relative;
+  height: 430px;
+  display: grid;
+  place-items: center;
+}
+/* Separate stage so responsive scaling never fights framer-motion's inline
+   transform on .ring-wrap. */
+.ring-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  perspective: 1200px;
+}
+.ring3d {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  transform-style: preserve-3d;
+  animation: ringSpin 30s linear infinite;
+}
+.ring-chip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 168px;
+  margin: -23px 0 0 -84px;
+  padding: 0.6rem 1rem;
+  text-align: center;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--bg-elev) 72%, transparent);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  backface-visibility: hidden;
+  transform: rotateY(var(--a)) translateZ(300px);
+  box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.8);
+}
+.ring-chip:nth-child(3n) {
+  color: var(--violet);
+}
+.ring-chip:nth-child(3n + 2) {
+  color: var(--cyan);
+}
+@keyframes ringSpin {
+  from {
+    transform: rotateX(-10deg) rotateY(0deg);
+  }
+  to {
+    transform: rotateX(-10deg) rotateY(360deg);
+  }
+}
+.ring-wrap:hover .ring3d {
+  animation-play-state: paused;
+}
+.ring-shadow {
+  position: absolute;
+  bottom: 46px;
+  width: 320px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(124, 92, 255, 0.32), transparent 70%);
+  filter: blur(18px);
+}
+.ring-hint {
+  position: absolute;
+  bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* =========================================================================
+   Playground — mini cube + flip card
+   ========================================================================= */
+.play-caption {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+.mini-scene {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 190px;
+  perspective: 800px;
+}
+.mini-cube {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  transform-style: preserve-3d;
+  animation: cubeSpin var(--cube-spin, 14s) linear infinite;
+}
+.mini-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  opacity: 0.92;
+}
+.mini-front {
+  transform: translateZ(46px);
+}
+.mini-back {
+  transform: rotateY(180deg) translateZ(46px);
+}
+.mini-right {
+  transform: rotateY(90deg) translateZ(46px);
+}
+.mini-left {
+  transform: rotateY(-90deg) translateZ(46px);
+}
+.mini-top {
+  transform: rotateX(90deg) translateZ(46px);
+}
+.mini-bottom {
+  transform: rotateX(-90deg) translateZ(46px);
+}
+.mini-shadow {
+  position: absolute;
+  bottom: 16px;
+  width: 130px;
+  height: 26px;
+  border-radius: 50%;
+  filter: blur(18px);
+  opacity: 0.55;
+  transition: background 0.4s;
+}
+
+.play-card--flip {
+  grid-column: span 2;
+}
+.flip {
+  display: block;
+  width: 100%;
+  height: 190px;
+  padding: 0;
+  perspective: 900px;
+  background: none;
+}
+.flip-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.85s var(--ease);
+}
+.flip.is-flipped .flip-inner {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  padding: 1.3rem;
+  text-align: left;
+  border-radius: var(--radius);
+  backface-visibility: hidden;
+  box-shadow: 0 18px 50px -24px rgba(0, 0, 0, 0.75);
+}
+.flip-back {
+  transform: rotateY(180deg);
+  background: var(--bg-soft);
+  border: 1px solid var(--line-strong);
+}
+.flip-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.flip-front .flip-kicker,
+.flip-title {
+  color: #fff;
+}
+.flip-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+.flip-body {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  max-width: 46ch;
+}
+
+/* =========================================================================
+   Magnetic CTA
+   ========================================================================= */
+.magnet-area {
+  display: inline-block;
+  perspective: 600px;
+}
+.magnet,
+.magnet:hover {
+  transform: translate3d(var(--mag-x, 0px), var(--mag-y, 0px), 0)
+    rotateX(var(--mag-rx, 0deg)) rotateY(var(--mag-ry, 0deg));
+  transition: transform 0.4s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+/* =========================================================================
    Responsive
    ========================================================================= */
+@media (max-width: 1080px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-scene {
+    height: 420px;
+    order: -1;
+  }
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+}
 @media (max-width: 900px) {
   .nav-links {
     display: none;
@@ -797,21 +1552,81 @@
   .play-grid {
     grid-template-columns: 1fr;
   }
-  .play-card--wide {
+  .play-card--wide,
+  .play-card--flip {
     grid-column: span 1;
     grid-row: auto;
   }
 }
+@media (max-width: 760px) {
+  /* Shrink the whole 3D stage rather than each object, so the composition holds. */
+  .scene-stage {
+    transform: rotateX(var(--sx, 0deg)) rotateY(var(--sy, 0deg)) scale(0.58);
+  }
+  .hero-scene {
+    height: 330px;
+    min-height: 0;
+  }
+  .ring-wrap {
+    height: 360px;
+  }
+  .ring-stage {
+    transform: scale(0.74);
+  }
+}
 @media (max-width: 560px) {
   .hero {
-    padding: 9rem 0 4rem;
+    padding: 8rem 0 4rem;
+  }
+  .hero-scene {
+    height: 300px;
+  }
+  .scene-stage {
+    transform: rotateX(var(--sx, 0deg)) rotateY(var(--sy, 0deg)) scale(0.46);
   }
   .hero-stats {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem 1rem;
   }
+  .ring-wrap {
+    height: 340px;
+  }
+  /* Scale the projection instead of the chips, so labels stay readable. */
+  .ring-wrap {
+    height: 300px;
+  }
+  .ring-stage {
+    transform: scale(0.56);
+  }
+  /* No hover on touch — the hint would be a lie. */
+  .ring-hint {
+    display: none;
+  }
+  .scroll-hint {
+    display: none;
+  }
+  .depth-caption {
+    display: none;
+  }
   .footer-bar {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* Motion-safety: freeze the 3D world, keep the layout intact. */
+@media (prefers-reduced-motion: reduce) {
+  .cube,
+  .mini-cube,
+  .orbit,
+  .pane,
+  .shard,
+  .ring3d,
+  .grid-floor,
+  .marquee-track {
+    animation: none !important;
+  }
+  .grid-floor {
+    opacity: 0.4;
   }
 }

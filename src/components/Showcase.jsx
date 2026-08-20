@@ -10,6 +10,7 @@ export default function Showcase() {
   const [angle, setAngle] = useState(120)
   const [density, setDensity] = useState('cozy')
   const [glow, setGlow] = useState(true)
+  const [flipped, setFlipped] = useState(false)
 
   const c1 = `hsl(${hue} 90% 62%)`
   const c2 = `hsl(${(hue + spread) % 360} 90% 60%)`
@@ -159,6 +160,54 @@ export default function Showcase() {
                 />
               ))}
             </div>
+          </div>
+
+          {/* Live 3D cube painted by the mixer */}
+          <div className="play-card play-card--cube" data-hover>
+            <p className="play-title">Object</p>
+            <div className="mini-scene">
+              <div className="mini-cube" style={{ '--cube-spin': `${angle / 24}s` }}>
+                {['front', 'back', 'right', 'left', 'top', 'bottom'].map((f) => (
+                  <span
+                    key={f}
+                    className={`mini-face mini-${f}`}
+                    style={{ background: gradient }}
+                  />
+                ))}
+              </div>
+              <span
+                className="mini-shadow"
+                style={{ background: glow ? c2 : 'transparent' }}
+              />
+            </div>
+            <p className="play-caption">
+              Faces inherit the mixer — drag a slider and watch it repaint.
+            </p>
+          </div>
+
+          {/* Click-to-flip card */}
+          <div className="play-card play-card--flip" data-hover>
+            <p className="play-title">Flip card</p>
+            <button
+              className={`flip ${flipped ? 'is-flipped' : ''}`}
+              onClick={() => setFlipped((f) => !f)}
+              aria-pressed={flipped}
+              aria-label="Flip the card"
+            >
+              <span className="flip-inner">
+                <span className="flip-face flip-front" style={{ background: gradient }}>
+                  <span className="flip-kicker">{density}</span>
+                  <span className="flip-title">Tap to turn</span>
+                </span>
+                <span className="flip-face flip-back">
+                  <span className="flip-kicker">Back side</span>
+                  <span className="flip-body">
+                    Real depth: two faces, one transform, zero images. Backface
+                    culling does the rest.
+                  </span>
+                </span>
+              </span>
+            </button>
           </div>
         </div>
       </div>
